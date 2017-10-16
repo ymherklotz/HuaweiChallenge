@@ -7,8 +7,8 @@ from tqdm import tqdm
 
 def main():
     #Read the file
-    for filename in tqdm(os.listdir('../data/4000unlabeledLP')):
-        img = cv2.imread('../data/4000unlabeledLP/'+filename)
+    for filename in tqdm(os.listdir('../../data/4000unlabeledLP')):
+        img = cv2.imread('../../data/4000unlabeledLP/'+filename)
         img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
 
         #Create a random sized kernel from 3 - 11
@@ -26,7 +26,7 @@ def main():
         if blur == 2:
             dst = cv2.medianBlur(img,kernel)
         #Save the image
-        cv2.imwrite('../data/4000unlabeledLP_blurred/'+filename,dst)
+        cv2.imwrite('../../data/4000unlabeledLP_blurred/'+filename,dst)
 
 if __name__ == '__main__':
     main()
