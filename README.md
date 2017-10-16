@@ -1,5 +1,9 @@
 # Huawei Image challenge
 
+### Input data
+
+The maximum width is 245 pixels, the maximum height is 78 pixels.
+
 ### Data Struture
 
 ```
