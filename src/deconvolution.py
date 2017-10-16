@@ -64,35 +64,10 @@ def defocus_kernel(d, sz=30):
     return kern
 
 
-def update(_):
-    ang = np.deg2rad( cv2.getTrackbarPos('angle', win) )
-    d = cv2.getTrackbarPos('d', win)
-    noise = 10**(-0.1*cv2.getTrackbarPos('SNR (db)', win))
-
-    if defocus:
-        psf = defocus_kernel(d)
-    else:
-        psf = motion_kernel(ang, d)
-    cv2.imshow('psf', psf)
-
-    psf /= psf.sum()
-    psf_pad = np.zeros_like(img)
-    kh, kw = psf.shape
-    psf_pad[:kh, :kw] = psf
-    PSF = cv2.dft(psf_pad, flags=cv2.DFT_COMPLEX_OUTPUT, nonzeroRows = kh)
-    PSF2 = (PSF**2).sum(-1)
-    iPSF = PSF / (PSF2 + noise)[...,np.newaxis]
-    RES = cv2.mulSpectrums(IMG, iPSF, 0)
-    res = cv2.idft(RES, flags=cv2.DFT_SCALE | cv2.DFT_REAL_OUTPUT )
-    res = np.roll(res, -kh//2, 0)
-    res = np.roll(res, -kw//2, 1)
-    cv2.imshow(win, res)
-    res = res*255.0
-    res = np.int32(res)
-    cv2.imwrite("output.png", res)
 
 
-def start_deconvultion(argv):
+
+def start_deconvolution(argv):
     print(__doc__)
     opts, args = getopt.getopt(argv[1:], '', ['circle', 'angle=', 'd=', 'snr='])
     opts = dict(opts)
@@ -117,6 +92,33 @@ def start_deconvultion(argv):
     IMG = cv2.dft(img, flags=cv2.DFT_COMPLEX_OUTPUT)
 
     defocus = '--circle' in opts
+
+    def update(_):
+        ang = np.deg2rad( cv2.getTrackbarPos('angle', win) )
+        d = cv2.getTrackbarPos('d', win)
+        noise = 10**(-0.1*cv2.getTrackbarPos('SNR (db)', win))
+
+        if defocus:
+            psf = defocus_kernel(d)
+        else:
+            psf = motion_kernel(ang, d)
+        cv2.imshow('print()sf', psf)
+
+        psf /= psf.sum()
+        psf_pad = np.zeros_like(img)
+        kh, kw = psf.shape
+        psf_pad[:kh, :kw] = psf
+        PSF = cv2.dft(psf_pad, flags=cv2.DFT_COMPLEX_OUTPUT, nonzeroRows = kh)
+        PSF2 = (PSF**2).sum(-1)
+        iPSF = PSF / (PSF2 + noise)[...,np.newaxis]
+        RES = cv2.mulSpectrums(IMG, iPSF, 0)
+        res = cv2.idft(RES, flags=cv2.DFT_SCALE | cv2.DFT_REAL_OUTPUT )
+        res = np.roll(res, -kh//2, 0)
+        res = np.roll(res, -kw//2, 1)
+        cv2.imshow(win, res)
+        res = res*255.0
+        res = np.int32(res)
+        cv2.imwrite("output.png", res)
 
     cv2.namedWindow(win)
     cv2.namedWindow('psf', 0)
