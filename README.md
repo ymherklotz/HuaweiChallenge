@@ -1,5 +1,12 @@
 # Huawei Image challenge
 
+## General use
+To debur an image you just have to:
+
+```shell
+python main.py --data input.jpg --output output.jpg
+```
+
 ### Input data
 
 The maximum width is 245 pixels, the maximum height is 78 pixels.
