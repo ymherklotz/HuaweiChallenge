@@ -1,9 +1,9 @@
 # Huawei Image challenge
 
-## General use 
-To debur an image you just have to: 
+## General use
+To debur an image you just have to:
 
-```Python
+```shell
 python main.py --data input.jpg --output output.jpg
 ```
 
