@@ -7,6 +7,21 @@ from tqdm import tqdm
 
 def main():
     WHITE = [255,255,255]
+    
+    max_width = 0
+    max_height = 0
+    
+    #Find the maximum width and height in the folder
+    for filename in tqdm(os.listdir('../../data/4000unlabeledLP')):
+        if img.shape[0] > max_height:
+            max_height = img.shape[0]
+        if img.shape[1] > min_height:
+            min_height = img.shape[1]
+
+    #Error checking
+    if (max_height == 0 && max_width == 0):
+        raise imageBoundError('No images in database')
+    
     #Read the files
     for filename in tqdm(os.listdir('../../data/4000unlabeledLP')):
         img = cv2.imread('../../data/4000unlabeledLP/'+filename)
