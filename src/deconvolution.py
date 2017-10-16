@@ -64,9 +64,6 @@ def defocus_kernel(d, sz=30):
     return kern
 
 
-
-
-
 def start_deconvolution(argv):
     print(__doc__)
     opts, args = getopt.getopt(argv[1:], '', ['circle', 'angle=', 'd=', 'snr='])
@@ -102,7 +99,7 @@ def start_deconvolution(argv):
             psf = defocus_kernel(d)
         else:
             psf = motion_kernel(ang, d)
-        cv2.imshow('print()sf', psf)
+        cv2.imshow('psf', psf)
 
         psf /= psf.sum()
         psf_pad = np.zeros_like(img)
@@ -121,7 +118,6 @@ def start_deconvolution(argv):
         cv2.imwrite("output.png", res)
 
     cv2.namedWindow(win)
-    cv2.namedWindow('psf', 0)
     cv2.createTrackbar('angle', win, int(opts.get('--angle', 135)), 180, update)
     cv2.createTrackbar('d', win, int(opts.get('--d', 22)), 50, update)
     cv2.createTrackbar('SNR (db)', win, int(opts.get('--snr', 25)), 50, update)
@@ -134,7 +130,6 @@ def start_deconvolution(argv):
         if ch == ord(' '):
             defocus = not defocus
             update(None)
-
 
 
 if __name__ == '__main__':
