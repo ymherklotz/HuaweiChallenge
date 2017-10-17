@@ -1,6 +1,9 @@
 import argparse
 import cv2
 from network import NeuralNet
+from filters import laplacian
+from filters import median
+from filters import bilateral
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -31,8 +34,27 @@ def main():
     input_name = args.data
     img = cv2.imread(input_name)
     fig = plt.figure()
-    ax1 = fig.add_subplot(2,2,1)
+    ax1 = fig.add_subplot(3,3,1)
+    ax1.set_title("Input image")
     ax1.imshow(img)
+
+    #Stage 1 High pass filtering
+    img = bilateral(img)
+    ax2 = fig.add_subplot(3,3,2)
+    ax2.set_title("Bilateral filtering")
+    ax2.imshow(img)
+
+    #Stage 2 Median filter
+    img = median(img)
+    ax3 = fig.add_subplot(3,3,3)
+    ax3.set_title("Median filtering")
+    ax3.imshow(img)
+
+    #Stage 3 High pass filtering
+    img = laplacian(img)
+    ax4 = fig.add_subplot(3,3,4)
+    ax4.set_title("High pass filtering")
+    ax4.imshow(img)
 
     #Stage 1 add padding
     img,y,x = add_padding(img)
@@ -46,9 +68,10 @@ def main():
     #Stage 4 More openCV
 
     #End
-    ax2 = fig.add_subplot(2,2,2)
     img = remove_padding(img,x,y)
-    ax2.imshow(img)
+    ax5 = fig.add_subplot(3,3,5)
+    ax5.set_title("After machine learning")
+    ax5.imshow(img)
     plt.show()
 
 
