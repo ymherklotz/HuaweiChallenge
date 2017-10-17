@@ -4,7 +4,7 @@
 To debur an image you just have to:
 
 ```shell
-python main.py --data input.jpg --output output.jpg
+$ python main.py --data input.jpg --output output.jpg
 ```
 
 ### Input data

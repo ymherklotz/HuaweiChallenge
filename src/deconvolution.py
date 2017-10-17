@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-'''
+"""
 Wiener deconvolution.
 
 Sample shows how DFT can be used to perform Weiner deconvolution [1]
@@ -28,7 +28,9 @@ Examples:
 
 
 [1] http://en.wikipedia.org/wiki/Wiener_deconvolution
-'''
+"""
+
+from utils.exceptions import ValidImagePathError
 
 import numpy as np
 import cv2
@@ -66,40 +68,41 @@ def defocus_kernel(d, sz=30):
 
 def start_deconvolution(argv):
     print(__doc__)
-    opts, args = getopt.getopt(argv[1:], '', ['circle', 'angle=', 'd=', 'snr='])
+    opts, args = getopt.getopt(argv[1:], "", ["circle", "angle=", "d=", "snr="])
     opts = dict(opts)
-    try:
-        fn = args[0]
-    except:
-        fn = '../data/licenseplate_motion.jpg'
 
-    win = 'deconvolution'
+    if len(args) == 0:
+        raise ValidImagePathError("File path not specified")
+
+    fn = args[0]
+    
+    win = "deconvolution"
 
     img = cv2.imread(fn, 0)
     height, width = img.shape[:2]
     img = cv2.copyMakeBorder(img, (width-height)//2, (width-height)//2, 0, 0, cv2.BORDER_CONSTANT)
     if img is None:
-        print('Failed to load fn1:', fn1)
+        print("Failed to load fn1:", fn1)
         sys.exit(1)
 
     img = np.float32(img)/255.0
-    cv2.imshow('input', img)
+    cv2.imshow("input", img)
 
     img = blur_edge(img)
     IMG = cv2.dft(img, flags=cv2.DFT_COMPLEX_OUTPUT)
 
-    defocus = '--circle' in opts
+    defocus = "--circle" in opts
 
     def update(_):
-        ang = np.deg2rad( cv2.getTrackbarPos('angle', win) )
-        d = cv2.getTrackbarPos('d', win)
-        noise = 10**(-0.1*cv2.getTrackbarPos('SNR (db)', win))
+        ang = np.deg2rad( cv2.getTrackbarPos("angle", win) )
+        d = cv2.getTrackbarPos("d", win)
+        noise = 10**(-0.1*cv2.getTrackbarPos("SNR (db)", win))
 
         if defocus:
             psf = defocus_kernel(d)
         else:
             psf = motion_kernel(ang, d)
-        cv2.imshow('psf', psf)
+        cv2.imshow("psf", psf)
 
         psf /= psf.sum()
         psf_pad = np.zeros_like(img)
@@ -118,19 +121,19 @@ def start_deconvolution(argv):
         cv2.imwrite("output.png", res)
 
     cv2.namedWindow(win)
-    cv2.createTrackbar('angle', win, int(opts.get('--angle', 135)), 180, update)
-    cv2.createTrackbar('d', win, int(opts.get('--d', 22)), 50, update)
-    cv2.createTrackbar('SNR (db)', win, int(opts.get('--snr', 25)), 50, update)
+    cv2.createTrackbar("angle", win, int(opts.get("--angle", 135)), 180, update)
+    cv2.createTrackbar("d", win, int(opts.get("--d", 22)), 50, update)
+    cv2.createTrackbar("SNR (db)", win, int(opts.get("--snr", 25)), 50, update)
     update(None)
 
     while True:
         ch = cv2.waitKey()
         if ch == 27:
             break
-        if ch == ord(' '):
+        if ch == ord(" "):
             defocus = not defocus
             update(None)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     start_deconvolution(sys.argv)
