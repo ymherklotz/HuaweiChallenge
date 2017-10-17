@@ -4,7 +4,7 @@
 To debur an image you just have to:
 
 ```shell
-python main.py --data input.jpg --output output.jpg
+$ python main.py --data input.jpg --output output.jpg
 ```
 
 ### Input data
@@ -48,3 +48,16 @@ When you are done with the virtual environment and with editing the project, you
 ``` shell
 $ deactivate
 ```
+
+## Resources
+
+### Papers
+
+- [Motion deblurring](http://www.cse.cuhk.edu.hk/leojia/projects/motion_deblurring/deblur_siggraph08.pdf)
+- [Blurred image restoration](http://yuzhikov.com/articles/BlurredImagesRestoration1.htm)
+- [Image restoration](https://en.wikipedia.org/wiki/Image_restoration)
+
+#### Wiener Deconvolution
+
+- [Matlab Wiener deconvolution](https://uk.mathworks.com/help/images/examples/deblurring-images-using-a-wiener-filter.html)
+- [Wiener deconvolution Wikipedia](https://en.wikipedia.org/wiki/Wiener_deconvolution)
