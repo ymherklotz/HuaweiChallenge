@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import cv2
 import numpy as np
 import os
@@ -15,9 +17,9 @@ def main():
         height = img.shape[0]
         width = img.shape[1]
         # Calculate how much padding is needed for the width
-        padding_x = (245 - width) // 2
+        padding_x = (max_width - width) // 2
         # Calculate how much padding is needed for the height
-        padding_y = (78 - height) // 2
+        padding_y = (max_height - height) // 2
 
         img = cv2.copyMakeBorder(img,padding_y,padding_y,padding_x,padding_x,cv2.BORDER_CONSTANT,value=BLACK)
         cv2.imwrite('../../data/4000unlabeledLP_padded/'+filename,img)
@@ -28,9 +30,9 @@ def main():
         height = img.shape[0]
         width = img.shape[1]
         # Calculate how much padding is needed for the width
-        padding_x = (245 - width) // 2
+        padding_x = (max_width - width) // 2
         # Calculate how much padding is needed for the height
-        padding_y = (78 - height) // 2
+        padding_y = (max_height - height) // 2
 
         img = cv2.copyMakeBorder(img,padding_y,padding_y,padding_x,padding_x,cv2.BORDER_CONSTANT,value=BLACK)
         cv2.imwrite('../../data/4000unlabeledLP_blurred_padded/'+filename,img)
