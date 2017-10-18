@@ -1,9 +1,8 @@
 from __future__ import division, print_function, absolute_import
 
 import tflearn
-from tflearn.layers.core import input_data, dropout, fully_connected
-from tflearn.layers.conv import conv_2d, max_pool_2d
-from tflearn.layers.normalization import local_response_normalization
+from tflearn.layers.core import input_data
+from tflearn.layers.conv import conv_2d, conv_2d_transpose, max_pool_2d
 from tflearn.layers.estimator import regression
 import glob
 import numpy as np
@@ -28,11 +27,13 @@ class NeuralNet():
     def __create_model(self):
         # Building convolutional network
         network = input_data(shape=[None, IMG_HEIGHT, IMG_WIDTH, 3], name='input')
-        network = conv_2d(network, 32, 3, activation='relu', regularizer="L2")
-        network = local_response_normalization(network)
-        network = conv_2d(network, 64, 3, activation='relu', regularizer="L2")
-        network = local_response_normalization(network)
-        network = conv_2d(network, 3, 3, activation='relu', regularizer="L2")
+        network = conv_2d_transpose(network, 64, 9, [IMG_HEIGHT*2, IMG_WIDTH*2, 64], strides=2,  activation='relu', regularizer="L2")
+        network = max_pool_2d(network, 2)
+        network = conv_2d_transpose(network, 128, 3, [IMG_HEIGHT*2, IMG_WIDTH*2, 128], strides=2,  activation='relu', regularizer="L2")
+        network = max_pool_2d(network, 2)
+        network = conv_2d(network, 128, 9, activation='LeakyReLU', regularizer="L2")
+        network = conv_2d(network, 64, 7, activation='LeakyReLU', regularizer="L2")
+        network = conv_2d(network, 3, 3, activation='LeakyReLU', regularizer="L2")
         network = regression(network, optimizer='adam', learning_rate=0.01,
                              loss='categorical_crossentropy', name='target')
         model = tflearn.DNN(network, tensorboard_verbose=0)
