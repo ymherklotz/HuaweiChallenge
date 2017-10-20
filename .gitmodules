@@ -1,0 +1,4 @@
+[submodule "thirdparty/srez"]
+	path = thirdparty/srez
+	url = https://github.com/david-gpu/srez.git
+	branch = master
