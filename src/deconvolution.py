@@ -19,15 +19,9 @@ Usage:
     ESC   - exit
 
 Examples:
-  deconvolution.py --angle 135 --d 22  ../data/licenseplate_motion.jpg
-    (image source: http://www.topazlabs.com/infocus/_images/licenseplate_compare.jpg)
-
-  deconvolution.py --angle 86 --d 31  ../data/text_motion.jpg
-  deconvolution.py --circle --d 19  ../data/text_defocus.jpg
-    (image source: compact digital photo camera, no artificial distortion)
-
-
-[1] http://en.wikipedia.org/wiki/Wiener_deconvolution
+  deconvolution.py --angle 135 --d 22  ../data/image_name.jpg
+  deconvolution.py --angle 86 --d 31  ../data/image_name.jpg
+  deconvolution.py --circle --d 19  ../data/image_name.jpg
 """
 
 from utils.exceptions import ValidImagePathError
@@ -43,7 +37,7 @@ def blur_edge(img, d=20):
     h, w  = img.shape[:2]
     img_pad = cv2.copyMakeBorder(img, d, d, d, d, cv2.BORDER_WRAP)
     img_blur = cv2.GaussianBlur(img_pad, (2*d+1, 2*d+1), -1)[d:-d,d:-d]
-    y, x = np.indices((h, w))#!/usr/bin/env python
+    y, x = np.indices((h, w))
     dist = np.dstack([x, w-x-1, y, h-y-1]).min(-1)
     w = np.minimum(np.float32(dist)/d, 1.0)
     return img*w + img_blur*(1-w)
